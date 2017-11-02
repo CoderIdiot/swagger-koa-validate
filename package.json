@@ -1,0 +1,43 @@
+{
+    "name": "swagger-koa-validate",
+    "version": "0.0.1",
+    "description": "a koa middleware for swagger spec validate",
+    "main": "dist/src/index.js",
+    "scripts": {
+        "watch": "tsc -w",
+        "test-debug": "DEBUG=* DEBUG_DEPTH=null mocha -u tdd --timeout 999999 --colors ./dist/test --recursive",
+        "test": "mocha -u tdd --timeout 999999 --colors ./dist/test --recursive"
+    },
+    "author": "luckymark",
+    "license": "MIT",
+    "dependencies": {
+        "@types/fs-extra": "^4.0.2",
+        "@types/node": "^8.0.30",
+        "ajv": "^5.2.3",
+        "async-file": "^2.0.2",
+        "debug-trace-fn": "^0.1.1",
+        "fs-extra": "^4.0.2",
+        "path-to-regexp": "^2.0.0",
+        "request": "^2.82.0",
+        "request-promise-native": "^1.0.5",
+        "yamljs": "^0.3.0"
+    },
+    "devDependencies": {
+        "@types/assert": "0.0.31",
+        "@types/koa": "^2.0.39",
+        "@types/node": "^8.0.30",
+        "@types/ramda": "^0.24.13",
+        "commander": "^2.11.0",
+        "debug-trace-fn": "^0.1.1",
+        "koa": "^2.3.0",
+        "mocha": "^3.5.0",
+        "mocha-typescript": "^1.1.9",
+        "moment": "^2.18.1",
+        "ramda": "^0.24.1",
+        "request": "^2.82.0",
+        "request-promise-native": "^1.0.5",
+        "supertest": "^3.0.0",
+        "typescript": "^2.4.2",
+        "yamljs": "^0.3.0"
+    }
+}

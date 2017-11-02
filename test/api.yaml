@@ -1,0 +1,35 @@
+openapi: 3.0.0
+paths:
+  /user: 
+    get:
+      operationId: getUserList
+      parameters:
+        - in: header
+          name: id
+          schema:
+            type: integer
+            format: int64
+  /user/action/login: 
+    post:
+      operationId: login
+  /user/{id}:
+    get:
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+            format: int64
+  /blog:
+    get:
+      operationId: getBlogsByPage
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            format: int64
+    
+
+ 

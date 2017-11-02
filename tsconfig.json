@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "outDir": "dist",
+        "target": "ES2015",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "sourceRoot": "."
+    },
+    "include": [
+        "src/**/*",
+        "test/**/*"
+    ]
+}
