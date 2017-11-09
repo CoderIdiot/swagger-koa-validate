@@ -20,7 +20,8 @@
         "json-schema-ref-parser": "^4.0.3",
         "path-to-regexp": "^2.0.0",
         "request": "^2.82.0",
-        "request-promise-native": "^1.0.5"
+        "request-promise-native": "^1.0.5",
+        "yamljs": "^0.3.0"
     },
     "devDependencies": {
         "@types/assert": "0.0.31",
