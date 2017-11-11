@@ -5,7 +5,7 @@
     "main": "dist/src/index.js",
     "scripts": {
         "watch": "tsc -w",
-        "test-debug": "DEBUG=* DEBUG_DEPTH=null mocha -u tdd --timeout 999999 --colors ./dist/test --recursive",
+        "test-debug": "tsc && DEBUG=* DEBUG_DEPTH=null mocha -u tdd --timeout 999999 --colors ./dist/test --recursive",
         "test": "mocha -u tdd --timeout 999999 --colors ./dist/test --recursive"
     },
     "author": "luckymark",

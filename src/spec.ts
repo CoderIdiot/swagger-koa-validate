@@ -18,6 +18,9 @@ export default (spec: object) =>
     }
 
 function checkRequest(ctx) {
+    // trace(ctx)
+    // trace(ctx.swagger)
+
     checkPath(ctx)
     checkMethod(ctx)
     checkParamsInPath(ctx)
@@ -25,6 +28,9 @@ function checkRequest(ctx) {
     checkQueryString(ctx)
 
     checkHeader(ctx)
+
+    // trace(ctx.swagger)
+    // trace(ctx)
 
     ctx.status = 200
 }
@@ -65,7 +71,7 @@ const checkMethod = (ctx) => {
 
 const checkParamsInPath = (ctx) => checkParam(ctx, 'path', ctx.swagger.paramsInUrl)
 
-const checkQueryString = (ctx) => checkParam(ctx, 'query', ctx.query)
+const checkQueryString = (ctx) => checkParam(ctx, 'query', trace(ctx.query))
 
 const checkHeader = (ctx) => checkParam(ctx, 'header', ctx.header)
 

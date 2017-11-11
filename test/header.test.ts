@@ -24,4 +24,10 @@ class HeaderTest {
         assert.equal(res.body.message, 'Invalid format for parameter in header {id}, received: string.  errors:data should be integer')
     }
 
+    @test("void header")
+    async testVoidHeader() {
+        let res = await request.get('/user')
+        assert.equal(res.statusCode, 400)
+    }
+
 }

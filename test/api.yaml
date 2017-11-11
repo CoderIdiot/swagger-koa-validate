@@ -6,6 +6,7 @@ paths:
       parameters:
         - in: header
           name: id
+          required: true
           schema:
             type: integer
             format: int64
