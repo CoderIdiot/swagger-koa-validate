@@ -25,8 +25,6 @@ function checkRequest(ctx) {
   checkQueryString(ctx)
   checkHeader(ctx)
 
-  // trace(ctx.swagger)
-
   ctx.status = 200
 }
 
