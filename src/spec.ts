@@ -81,31 +81,12 @@ const checkRequired = ctx => {
 }
 
 const checkParamExist = (ctx, paramIn, paramName) => {
-  switch (paramIn) {
-    case "header": {
-      if (R.has(paramName, ctx.header)) break
-      throw {
-        status: 400,
-        message:
-          "Invalid Required Param " + paramName + " for parameter in " + paramIn
-      }
+  if (!R.has(paramName, ctx[paramIn]))
+    throw {
+      status: 400,
+      message:
+        "Invalid Required Param " + paramName + "for parameter in " + paramIn
     }
-    case "query": {
-      if (R.has(paramName, ctx.query)) break
-      throw {
-        status: 400,
-        message:
-          "Invalid Required Param " + paramName + " for parameter in " + paramIn
-      }
-    }
-    default: {
-      throw {
-        status: 400,
-        message:
-          "Invalid Required Param " + paramName + "for parameter in " + paramIn
-      }
-    }
-  }
 }
 
 const checkParamsInPath = ctx =>
