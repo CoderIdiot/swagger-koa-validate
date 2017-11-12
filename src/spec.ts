@@ -78,12 +78,11 @@ const checkRequired = ctx => {
 
   R.forEach(value => {
       if (R.has("required", value))
-          checkParamExist(ctx, value['in'], value['name'])    
+          checkParamExist(ctx, value['in'], value['name'])
   }, params)
 }
 
 const checkParamExist = (ctx, paramIn, paramName) => {
-  trace(ctx.header, 'header')
   switch (paramIn) {
     case 'header': {
       if (R.has(paramName, ctx.header)) break;
@@ -93,8 +92,13 @@ const checkParamExist = (ctx, paramIn, paramName) => {
             "Invalid Required Param " + paramName + " for parameter in " + paramIn
       }
     }
-    case 'path': {
-      break;
+    case 'query': {
+      if (R.has(paramName, ctx.query)) break;
+      throw {
+        status: 400,
+        message:
+            "Invalid Required Param " + paramName + " for parameter in " + paramIn
+      }
     }  
     default: {
       throw {
