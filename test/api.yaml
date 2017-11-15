@@ -10,7 +10,7 @@ paths:
           schema:
             type: integer
             format: int64
-  /user/action/login: 
+  /user?action=login: 
     post:
       operationId: login
   /user/{id}:

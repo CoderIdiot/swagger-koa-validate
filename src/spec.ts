@@ -11,13 +11,13 @@ ajv.addFormat("int32", value => Number.isInteger(+value))
 ajv.addFormat("int64", value => Number.isInteger(+value))
 
 export default (orinSpec: object) => {
-  const spec = { paths: preCompile(orinSpec['paths']) }
+  const spec = { paths: preCompile(orinSpec["paths"]) }
   return async (ctx, next) => {
     ctx.swagger = spec
     checkRequest(ctx)
     await next()
   }
-}  
+}
 
 function checkRequest(ctx) {
   checkPath(ctx)
@@ -42,13 +42,41 @@ const preCompile = R.mapObjIndexed((value, key, obj) => {
   })
 })
 
+const objSize = obj => {
+  let size = 0
+  let key: any
+  for (key in obj) size++
+
+  return size
+}
+
 // 用 exec 检测是否符合 符合则把 url 参数 和 对应的 api 片段 添加到 ctx.swagger
 const checkPath = ctx => {
   let pathBody = R.find(([path, pathBody]) => {
+    trace(ctx.URL.pathname, "CTX URL PATHNAME")
+    trace(ctx.url, "CTX URL")
+
+    let url_has_action = false
+    R.forEachObjIndexed((v, k) => {
+      if (k == "action") url_has_action = true
+    }, ctx.query)
+
+    if (url_has_action) {
+      let params = pathBody["urlReg"].exec(ctx.url)
+      if (!params) return
+      else {
+        ctx.swagger.paramsInUrl = R.zipObj(pathBody["urlKeys"], R.tail(params))
+        ctx.swagger.pathBody = pathBody
+        return true
+      }
+    }
+
     let params = pathBody["urlReg"].exec(ctx.URL.pathname)
     if (!params) return false
+
     ctx.swagger.paramsInUrl = R.zipObj(pathBody["urlKeys"], R.tail(params))
     ctx.swagger.pathBody = pathBody
+
     return true
   }, R.toPairs(ctx.swagger.paths))
 
@@ -60,7 +88,9 @@ const checkMethod = ctx => {
   let { method, swagger } = ctx
   method = R.toLower(method)
 
-  if (!R.has(method, swagger.pathBody)) throw { status: 501 }
+  if (!R.has(method, swagger.pathBody)) {
+    throw { status: 501 }
+  }
   swagger.methodBody = swagger.pathBody[method]
   swagger.methodBody.parameters = swagger.methodBody.parameters || {}
 }
@@ -68,36 +98,33 @@ const checkMethod = ctx => {
 // 检测参数是否是 required, 只检测是否存在参数, 参数是否符合格式不检测
 // 需要重构, 重复了
 const checkRequired = ctx => {
-  let path = R.find(([path, pathBody]) => {
-    let params = pathBody["urlReg"].exec(ctx.URL.pathname)
-    if (!params) return false
-    return true
-  }, R.toPairs(ctx.swagger.paths))
-
   let params = []
-  R.forEach(value => {
-    R.forEachObjIndexed((v, k) => {
-      if (R.has("parameters", v))
-        R.forEach(p => params.push(p), v["parameters"])
-    }, value)
-  }, path)
+  R.forEachObjIndexed((v, k) => {
+    trace(k, "KEY")
+    trace(v, "VALUE")
 
+    if (R.has("parameters", v)) {
+      trace(v["parameters"], "Get Param")
+      R.forEach(p => params.push(p), v["parameters"])
+    }
+  }, ctx.swagger.pathBody)
+
+  trace(ctx.swagger.pathBody, "CTX SWAGGER PATHBODY")
+  trace(params, "Required Check")
   R.forEach(value => {
     if (R.has("required", value))
       checkParamExist(ctx, value["in"], value["name"])
   }, params)
 }
 
-
 const checkParamExist = (ctx, paramIn, paramName) => {
   if (!R.has(paramName, ctx[paramIn]))
     throw {
       status: 400,
       message:
-        "Invalid Required Param " + paramName + "for parameter in " + paramIn
+        "Invalid Required Param " + paramName + " for parameter in " + paramIn
     }
 }
-
 
 const checkParamsInPath = ctx =>
   checkParam(ctx, "path", ctx.swagger.paramsInUrl)
@@ -112,7 +139,7 @@ const findParam = (ctx, paramIn, paramName) =>
     ctx.swagger.methodBody.parameters
   )
 
-// 检测参数的方法, 使用 api 里定义的 schema  
+// 检测参数的方法, 使用 api 里定义的 schema
 const checkParam = (ctx, paramIn, parameters) => {
   return R.find(([paramName, value]) => {
     let paramSpec = findParam(ctx, paramIn, paramName)

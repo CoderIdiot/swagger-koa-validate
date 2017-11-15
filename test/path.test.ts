@@ -44,7 +44,7 @@ class PathTest {
 
   @test("path with queryString")
   async testPathWithQueryString() {
-    let res = await request.post("/user/action/login");
+    let res = await request.post("/user?action=login");
     assert.equal(res.statusCode, 200);
   }
 }
