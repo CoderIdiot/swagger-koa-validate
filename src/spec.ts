@@ -10,11 +10,14 @@ const ajv = new Ajv({ coerceTypes: "array" })
 ajv.addFormat("int32", value => Number.isInteger(+value))
 ajv.addFormat("int64", value => Number.isInteger(+value))
 
-export default (spec: object) => async (ctx, next) => {
-  ctx.swagger = { paths: preCompile(spec["paths"]) }
-  checkRequest(ctx)
-  await next()
-}
+export default (orinSpec: object) => {
+  const spec = { paths: preCompile(orinSpec['paths']) }
+  return async (ctx, next) => {
+    ctx.swagger = spec
+    checkRequest(ctx)
+    await next()
+  }
+}  
 
 function checkRequest(ctx) {
   checkPath(ctx)
@@ -28,6 +31,7 @@ function checkRequest(ctx) {
   ctx.status = 200
 }
 
+// 得到正则表达式和 url 参数
 const preCompile = R.mapObjIndexed((value, key, obj) => {
   let keys = []
   let reg = pathToRegexp(R.replace("}", "", R.replace("{", ":", key)), keys)
@@ -38,6 +42,7 @@ const preCompile = R.mapObjIndexed((value, key, obj) => {
   })
 })
 
+// 用 exec 检测是否符合 符合则把 url 参数 和 对应的 api 片段 添加到 ctx.swagger
 const checkPath = ctx => {
   let pathBody = R.find(([path, pathBody]) => {
     let params = pathBody["urlReg"].exec(ctx.URL.pathname)
@@ -50,6 +55,7 @@ const checkPath = ctx => {
   if (!pathBody) throw { status: 404 }
 }
 
+// 检测 method, 并把 api 定义的参数放到 swagger.methodBody
 const checkMethod = ctx => {
   let { method, swagger } = ctx
   method = R.toLower(method)
@@ -59,6 +65,8 @@ const checkMethod = ctx => {
   swagger.methodBody.parameters = swagger.methodBody.parameters || {}
 }
 
+// 检测参数是否是 required, 只检测是否存在参数, 参数是否符合格式不检测
+// 需要重构, 重复了
 const checkRequired = ctx => {
   let path = R.find(([path, pathBody]) => {
     let params = pathBody["urlReg"].exec(ctx.URL.pathname)
@@ -80,6 +88,7 @@ const checkRequired = ctx => {
   }, params)
 }
 
+
 const checkParamExist = (ctx, paramIn, paramName) => {
   if (!R.has(paramName, ctx[paramIn]))
     throw {
@@ -88,6 +97,7 @@ const checkParamExist = (ctx, paramIn, paramName) => {
         "Invalid Required Param " + paramName + "for parameter in " + paramIn
     }
 }
+
 
 const checkParamsInPath = ctx =>
   checkParam(ctx, "path", ctx.swagger.paramsInUrl)
@@ -102,6 +112,7 @@ const findParam = (ctx, paramIn, paramName) =>
     ctx.swagger.methodBody.parameters
   )
 
+// 检测参数的方法, 使用 api 里定义的 schema  
 const checkParam = (ctx, paramIn, parameters) => {
   return R.find(([paramName, value]) => {
     let paramSpec = findParam(ctx, paramIn, paramName)
