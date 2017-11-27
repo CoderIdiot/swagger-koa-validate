@@ -53,8 +53,6 @@ const objSize = obj => {
 // 用 exec 检测是否符合 符合则把 url 参数 和 对应的 api 片段 添加到 ctx.swagger
 const checkPath = ctx => {
   let pathBody = R.find(([path, pathBody]) => {
-    trace(ctx.URL.pathname, "CTX URL PATHNAME")
-    trace(ctx.url, "CTX URL")
 
     let url_has_action = false
     R.forEachObjIndexed((v, k) => {
@@ -100,17 +98,11 @@ const checkMethod = ctx => {
 const checkRequired = ctx => {
   let params = []
   R.forEachObjIndexed((v, k) => {
-    trace(k, "KEY")
-    trace(v, "VALUE")
-
     if (R.has("parameters", v)) {
-      trace(v["parameters"], "Get Param")
       R.forEach(p => params.push(p), v["parameters"])
     }
   }, ctx.swagger.pathBody)
 
-  trace(ctx.swagger.pathBody, "CTX SWAGGER PATHBODY")
-  trace(params, "Required Check")
   R.forEach(value => {
     if (R.has("required", value))
       checkParamExist(ctx, value["in"], value["name"])
