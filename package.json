@@ -17,12 +17,10 @@
         "ajv": "^5.2.3",
         "async-file": "^2.0.2",
         "debug-trace-fn": "^0.1.1",
-        "fs-extra": "^4.0.2",
         "json-schema-ref-parser": "^4.0.3",
         "path-to-regexp": "^2.0.0",
         "request": "^2.82.0",
         "request-promise-native": "^1.0.5",
-        "yamljs": "^0.3.0",
         "moment": "^2.18.1",
         "ramda": "^0.24.1"
 
