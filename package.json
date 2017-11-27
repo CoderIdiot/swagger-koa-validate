@@ -1,6 +1,6 @@
 {
     "name": "swagger-koa-validate",
-    "version": "0.0.6",
+    "version": "0.0.8",
     "description": "a koa middleware for swagger spec validate",
     "main": "dist/src/index.js",
     "scripts": {
@@ -23,7 +23,6 @@
         "request-promise-native": "^1.0.5",
         "moment": "^2.18.1",
         "ramda": "^0.24.1"
-
     },
     "devDependencies": {
         "@types/assert": "0.0.31",

@@ -1,34 +1,43 @@
 # swagger-koa-validate
 a koa middleware for swagger spec validate
 
-## TODO
-- required param
-- Swagger2Schema（validate once）
-- method name & header property name toLowercase
-
 ## Useage
-```typescript
-import * as Koa from "koa"
+
+    demo: https://github.com/CoderIdiot/swagger-koa-validation-demo
+    use with the koa:
+
+```javascript
+
+import Koa from "koa"
+import ValidatorFactory from "swagger-koa-validate"
+const $RefParser = require("json-schema-ref-parser")
+/*
+ * Read the API, and init the validate
+ */
+
 const app = new Koa()
+let parser = new $RefParser()
 
-const specString = fs.readFileSync(__dirname + '/../../test/api.yaml', 'utf-8')
-const spec = YAML.parse(specString)
-var validate
-
-parser.dereference(__dirname + '/../../test/api.yaml')
-    .then(function (spec) {
-        validate = ValidatorFactory(spec)
-        app.use(async (ctx, next) => {
-            try {
-                await next()
-            } catch (error) {
-                ctx.status = error.status || 400
-                ctx.body = { message: error.message }
-                trace(error)
-            }
-        })
-        app.use(validate)
+parser.dereference(__dirname + "/../api/api.yml", "utf-8").then(
+  spec => {
+    let validate = ValidatorFactory(spec)
+    app.use(async (ctx, next) => {
+      try {
+        await next()
+      } catch (error) {
+        ctx.status = error.status || 400
+        ctx.body = { message: error.message }
+        console.log("Error", error.status, error.message)
+      }
     })
-    .catch(console.log)
+    app.use(validate)
+    app.use(ctx => {
+      ctx.body = "hello world"
+    })
+  },
+  err => console.log(err)
+)
+
+app.listen(3000)
 
 ```
