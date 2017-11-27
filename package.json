@@ -1,12 +1,13 @@
 {
     "name": "swagger-koa-validate",
-    "version": "0.0.1",
+    "version": "0.0.6",
     "description": "a koa middleware for swagger spec validate",
     "main": "dist/src/index.js",
     "scripts": {
         "watch": "tsc -w",
         "test-debug": "tsc && DEBUG=* DEBUG_DEPTH=null mocha -u tdd --timeout 999999 --colors ./dist/test --recursive",
-        "test": "mocha -u tdd --timeout 999999 --colors ./dist/test --recursive"
+        "test": "mocha -u tdd --timeout 999999 --colors ./dist/test --recursive",
+        "push": "tsc && npm publish --registry http://registry.npmjs.org"
     },
     "author": "luckymark",
     "license": "MIT",
